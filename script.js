@@ -1,29 +1,33 @@
 
-//  let money = get.ElementById(money)
 
-// money = 100
+let chosenTileType = "plain"
 
-// function ett(){
-
-//   console.log( money +1)
-//   money = money +1 
-// }
-// setInterval(ett, 5000); 
-
-
-
-
-
-
-
-
+    function setTileType(type) {
+        chosenTileType = type
+        console.log(chosenTileType)
+    }
 
 window.addEventListener('DOMContentLoaded', (event) =>{
 
     let city_canvas = document.getElementById("canvas");
     let city_canvas_context = city_canvas.getContext('2d');
 
-   
+
+    city_canvas.addEventListener("click", function(e) {
+        console.log(tile_finder(e.offsetX, e.offsetY))
+        let clickedTile = tile_finder(e.offsetX, e.offsetY)
+        clickedTile.type = chosenTileType
+    })
+    
+
+    function tile_finder(x_position, y_position) {
+        for (let i = 0; i < board.blocks.length; i++) {
+            if (board.blocks[i].x < x_position && board.blocks[i].x + board.width > x_position && 
+                board.blocks[i].y < y_position && board.blocks[i].y + board.height > y_position) {
+                return board.blocks[i]
+            }
+        }
+    }
 
 
     class Tile {
@@ -32,21 +36,23 @@ window.addEventListener('DOMContentLoaded', (event) =>{
             this.y = y
             this.height = height
             this.width = width
-            this.type = type
+            this.type = type           
+        }
+    
+        draw(){
             switch(this.type) {
                 case "water":
                 this.color = "blue"
                 break
-                case "rock":
+                case "road":
                 this.color = "gray"
+                break
+                case "house":
+                this.color = "white"
                 break
                 default:
                 this.color = "green"
-                
-              }
-            
-        }
-        draw(){
+            }
             city_canvas_context.lineWidth = 1
             city_canvas_context.fillStyle = this.color
             city_canvas_context.strokeStyle = "black"
@@ -68,9 +74,7 @@ window.addEventListener('DOMContentLoaded', (event) =>{
                 for(let i = 0; this.x<city_canvas.width; i++){
                     let block
                     if(Math.random() < .91){
-                       block = new Tile(this.x, this.y, this.height, this.width, "grass")
-                    // }else if (Math.random() < .3){
-                    //     block = new Tile(this.x, this.y, this.height, this.width, "rock")
+                       block = new Tile(this.x, this.y, this.height, this.width, "plain")
                     }else{
                      block = new Tile(this.x, this.y, this.height, this.width, "water")
                     }
@@ -99,13 +103,5 @@ window.addEventListener('DOMContentLoaded', (event) =>{
     }, 140) 
 
     console.log(board.blocks)
+
 })
-
-let coordinate_x = 20
-let coordinate_y = 40
-
-for (let i = 0; i < city_canvas.height; i++) {
-    for (let i = 0; i < city.canvas.width; i++) {
-        console.log(coordinate_x, coordinate_y)
-    }
-}
