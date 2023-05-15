@@ -5,7 +5,6 @@
 <head>
 <h1 id="money"></h1> 
 </head>
-  <script src="script.js"></script>
 
   
 
@@ -16,7 +15,7 @@
   <button onclick="setTileType('road')">Road</button>
   <button onclick="setTileType('residential')">Residential</button>
   <button onclick="setTileType('commercial')">Commercial</button>
-  <button onclick="setTileType('industry')">Industry</button>
+  <button onclick="setTileType('industrial')">Industry</button>
   </div>
   
 
@@ -29,15 +28,8 @@
     
     <span id="timesClicked">0</span> 
     <button type="button" class="btn btn-default" onclick="javascript:btnClick()"><h1> Nästa runda </h1></button> 
-    <script>
-    var timesClicked = 0;
-function btnClick(){
-  timesClicked = timesClicked - 10;
-  document.getElementById('timesClicked').innerHTML = timesClicked;
-  return true
-}
-  
-    </script>  
+
  </body>
+ <script src="script.js"></script>
 
 </html> 
