@@ -1,7 +1,6 @@
 let chosenTileType = "plain";
 
 function setTileType(type) {
-    
   chosenTileType = type;
   console.log(chosenTileType);
 }
@@ -15,8 +14,6 @@ city_canvas.addEventListener("click", function (e) {
   if (clickedTile.type === "plain" || chosenTileType === "demolish") {
     clickedTile.type = chosenTileType;
   }
-
-  
 });
 
 function tile_finder(x_position, y_position) {
@@ -41,43 +38,41 @@ class Tile {
     this.type = type;
     // this.image = new Image();
     // this.image.src = imageSrc;
-    
   }
 
   draw() {
     switch (this.type) {
-        case "water":
-          this.color = "blue";
-          this.isDemolishable = false
-          this.cost = 10
-          break;
-        case "road":
-          this.color = "gray";
-          this.isDemolishable = true
-          this.cost = 10
-          break;
-        case "residential":
-          this.color = "lightgreen";
-          this.isDemolishable = false
-          this.cost = 10
-          break;
-        case "commercial":
-          this.color = "lightblue";
-          this.isDemolishable = false
-          this.cost = 10
-          break;
-        case "industrial":
-          this.color = "yellow";
-          this.isDemolishable = false
-          this.cost = 10
-          break;
-        default:
-          this.type = "plain"
-          this.color = "green";
-          this.cost = 10
+      case "water":
+        this.color = "blue";
+        this.isDemolishable = false;
+        this.cost = 10;
+        break;
+      case "road":
+        this.color = "gray";
+        this.isDemolishable = true;
+        this.cost = 10;
+        break;
+      case "residential":
+        this.color = "lightgreen";
+        this.isDemolishable = false;
+        this.cost = 10;
+        break;
+      case "commercial":
+        this.color = "lightblue";
+        this.isDemolishable = false;
+        this.cost = 10;
+        break;
+      case "industrial":
+        this.color = "yellow";
+        this.isDemolishable = false;
+        this.cost = 10;
+        break;
+      default:
+        this.type = "plain";
+        this.color = "green";
+        this.cost = 10;
+    }
 
-      }
-    
     city_canvas_context.lineWidth = 1;
     city_canvas_context.fillStyle = this.color;
     city_canvas_context.strokeStyle = "black";
@@ -93,7 +88,7 @@ class Grid {
     this.x = 0;
     this.y = 0;
     this.blocks = [];
-    
+
     for (let i = 0; this.y < city_canvas.height; i++) {
       for (let i = 0; this.x < city_canvas.width; i++) {
         let block;
@@ -114,7 +109,6 @@ class Grid {
       this.blocks[b].draw();
     }
   }
-    
 }
 
 let board = new Grid(70, 70);
@@ -123,26 +117,32 @@ window.setInterval(function () {
   board.draw();
 }, 140);
 
+console.log(board.blocks);
 
-console.log(board.blocks)
-
-
-
-
-function btnClick(){
+function btnClick() {
   var timesClicked = 0;
-const type = ["plain", "water", "road", "residential", "commercial", "industrial"]
-for (let i = 0; i < type.length; i++) {
+  const type = [
+    "plain",
+    "water",
+    "road",
+    "residential",
+    "commercial",
+    "industrial",
+  ];
+  let total_count = 0;
+  for (let i = 0; i < type.length; i++) {
+    let currentCost = 10
+    if (type[i] === "water") {
+      currentCost = 15
+    }
     let count = board.blocks.filter((obj) => obj.type === type[i]).length;
-    console.log(count)
-    let total_count = 0
-    total_count = total_count + count
-    
-}
+    console.log(count);
+    console.log(`Totalt värde på ${type[i]} är ${count * currentCost}`)
+    total_count = total_count + count;
+  }
 
-  timesClicked = board.blocks.cost * total_count
-  console.log(timesClicked)
-  document.getElementById('timesClicked').innerHTML = timesClicked;
-  return true
+  timesClicked = board.blocks.cost * total_count;
+  console.log(timesClicked);
+  document.getElementById("timesClicked").innerHTML = timesClicked;
+  return true;
 }
-
