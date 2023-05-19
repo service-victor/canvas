@@ -95,7 +95,7 @@ class Tile {
       default:
         this.type = "plain";
         this.color = "green";
-        this.isDemolishable = true;
+        this.isDemolishable = false;
     }
 
     city_canvas_context.lineWidth = 1;
