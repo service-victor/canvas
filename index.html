@@ -1,35 +1,82 @@
 <!DOCTYPE html>
-
-<html lang="en" dir="ltr">
-
-<head>
-<h1 id="money"></h1> 
-</head>
+ <html lang="en">
+ <head>
 
   
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="timer.css">
+  <title>Document</title>
+ </head>
+ <body>
 
-  <canvas  id="canvas" width="700" height="700"></canvas>
-  <h1 style="color: black" id="text"></h1>
-  <div id="toolbox">
-  <button onclick="setTileType('demolish')">Demolish</button>
-  <button onclick="setTileType('road')">Road</button>
-  <button onclick="setTileType('residential')">Residential</button>
-  <button onclick="setTileType('commercial')">Commercial</button>
-  <button onclick="setTileType('industrial')">Industry</button>
-  </div>
-  
-
-
-
-
-
-
-  <body translate="no"> 
+  <h1>
+  City Canvas
+  </h1>
     
-    <span id="timesClicked">0</span> 
-    <button type="button" class="btn btn-default" onclick="javascript:btnClick()"><h1> Nästa runda </h1></button> 
+    
+    <body translate="no"> 
+      
+        <canvas  id="canvas" width="700" height="700"></canvas>
+    
+      <div class="toolbox">
+        <button id="button1" onclick="setTileType('demolish')">Demolish</button>
+        <button id="button2" onclick="setTileType('road')">Road</button>
+        <button id="button3" onclick="setTileType('residential')">Residential</button>
+        <button id="button4" onclick="setTileType('commercial')">Commercial</button>
+        <button id="button5" onclick="setTileType('industrial')">Industry</button>
+        <button id="button6" onclick="setTileType('eps')">Power Station</button> 
+      </div>
+      
+    <div class="stats">
+      Time til next turn/ game start: <div class="card">
+        <span id="countdown" style="font-weight: bold;"></span>
+        </div>
+      
+     
+    Game status:  <span id="game status"></span> 
+    <br>
+    Money per turn:  <span id="moneyPerRound"></span> 
+    <br>
+    Money: <span id="money"></span> 
+    <br>
+    Power usage: <span id="power"></span>
+    <br> 
+    Power production: <span id="poweer"></span>
+  </div>
 
+    <script src="script.js"></script>
+
+    <script>
+
+    const button1 = document.getElementById('button1');
+    const button2 = document.getElementById('button2');
+    const button3 = document.getElementById('button3');
+    const button4 = document.getElementById('button4');
+    const button5 = document.getElementById('button5');
+    const button6 = document.getElementById('button6');
+
+    button1.addEventListener('click', handleButtonClick);
+    button2.addEventListener('click', handleButtonClick);
+    button3.addEventListener('click', handleButtonClick);
+    button4.addEventListener('click', handleButtonClick);
+    button5.addEventListener('click', handleButtonClick);
+    button6.addEventListener('click', handleButtonClick);
+
+    function handleButtonClick(event) {
+      const clickedButtonId = event.target.id;
+
+      button1.classList.remove('active');
+      button2.classList.remove('active');
+      button3.classList.remove('active');
+      button4.classList.remove('active');
+      button5.classList.remove('active');
+      button6.classList.remove('active');
+
+      event.target.classList.add('active');
+    }
+    </script>
+  
  </body>
- <script src="script.js"></script>
-
-</html> 
+ </html>
