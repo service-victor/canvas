@@ -1,7 +1,30 @@
 let chosenTileType = "plain";
+let tileCost = 0;
 
 function setTileType(type) {
   chosenTileType = type;
+  switch (chosenTileType) {
+    case "demolish":
+      tileCost = 30;
+      break;
+    case "road":
+      tileCost = 40;
+      break;
+    case "residential":
+      tileCost = 400;
+      break;
+    case "commercial":
+      tileCost = 500;
+      break;
+    case "industrial":
+      tileCost = 1000;
+      break;
+    case "eps":
+      tileCost = 1100;
+      break;
+    default:
+      break;
+  }
   console.log(chosenTileType);
 }
 
@@ -11,8 +34,13 @@ let city_canvas_context = city_canvas.getContext("2d");
 city_canvas.addEventListener("click", function (e) {
   console.log(tile_finder(e.offsetX, e.offsetY));
   let clickedTile = tile_finder(e.offsetX, e.offsetY);
-  if (clickedTile.type === "plain" || chosenTileType === "demolish") {
-    clickedTile.type = chosenTileType;
+  if (clickedTile.isDemolishable === true) {
+    if (clickedTile.type === "plain" || chosenTileType === "demolish") {
+      if (money >= tileCost) {
+        clickedTile.type = chosenTileType;
+        moneyFunction(-tileCost);
+      }
+    }
   }
 });
 
@@ -36,8 +64,6 @@ class Tile {
     this.height = height;
     this.width = width;
     this.type = type;
-    // this.image = new Image();
-    // this.image.src = imageSrc;
   }
 
   draw() {
@@ -45,32 +71,31 @@ class Tile {
       case "water":
         this.color = "blue";
         this.isDemolishable = false;
-        this.cost = 10;
         break;
       case "road":
         this.color = "gray";
         this.isDemolishable = true;
-        this.cost = 10;
         break;
       case "residential":
         this.color = "lightgreen";
-        this.isDemolishable = false;
-        this.cost = 10;
+        this.isDemolishable = true;
         break;
       case "commercial":
         this.color = "lightblue";
-        this.isDemolishable = false;
-        this.cost = 10;
+        this.isDemolishable = true;
         break;
       case "industrial":
         this.color = "yellow";
-        this.isDemolishable = false;
-        this.cost = 10;
+        this.isDemolishable = true;
+        break;
+      case "eps":
+        this.color = "orange";
+        this.isDemolishable = true;
         break;
       default:
         this.type = "plain";
         this.color = "green";
-        this.cost = 10;
+        this.isDemolishable = true;
     }
 
     city_canvas_context.lineWidth = 1;
@@ -119,30 +144,94 @@ window.setInterval(function () {
 
 console.log(board.blocks);
 
-function btnClick() {
-  var timesClicked = 0;
-  const type = [
-    "plain",
-    "water",
-    "road",
-    "residential",
-    "commercial",
-    "industrial",
-  ];
-  let total_count = 0;
-  for (let i = 0; i < type.length; i++) {
-    let currentCost = 10
-    if (type[i] === "water") {
-      currentCost = 15
-    }
-    let count = board.blocks.filter((obj) => obj.type === type[i]).length;
-    console.log(count);
-    console.log(`Totalt värde på ${type[i]} är ${count * currentCost}`)
-    total_count = total_count + count;
-  }
+let money = 7000;
 
-  timesClicked = board.blocks.cost * total_count;
-  console.log(timesClicked);
-  document.getElementById("timesClicked").innerHTML = timesClicked;
+function moneyFunction(buy) {
+  money = money + buy;
+  document.getElementById("money").innerHTML = money;
+  if (money < 0) {
+    document.getElementById("game status").innerHTML =
+      "GAME OVER! Reload page to restart";
+  }
+}
+
+function intervalCost() {
+  const type = [
+    { name: "plain", expense: 1, income: 0, powerUsage: 0 },
+    { name: "water", expense: 1, income: 0, powerUsage: 0 },
+    { name: "road", expense: 10, income: 0, powerUsage: 10 },
+    { name: "residential", expense: 80, income: 100, powerUsage: 90 },
+    { name: "commercial", expense: 150, income: 190, powerUsage: 100 },
+    { name: "industrial", expense: 200, income: 290, powerUsage: 200 },
+    { name: "eps", expense: 210, income: 0, powerUsage: 0 },
+  ];
+  let round_cost = 0;
+  let round_income = 0;
+  let round_expense = 0;
+  let totalPowerUsage = 0;
+  let epsCount = board.blocks.filter((obj) => obj.type === "eps").length;
+  totalPower = epsCount * 1000;
+
+  for (let i = 0; i < type.length; i++) {
+    let count = board.blocks.filter((obj) => obj.type === type[i].name).length;
+    console.log(count);
+    round_expense = round_expense + count * type[i].expense;
+    round_income = round_income + count * type[i].income;
+    totalPowerUsage = totalPowerUsage + count * type[i].powerUsage;
+  }
+  if (totalPowerUsage > totalPower) {
+    round_income = round_income * 0.5;
+  }
+  round_cost = round_cost + round_income - round_expense;
+
+  console.log(round_cost);
+  moneyFunction(round_cost);
+  document.getElementById("moneyPerRound").innerHTML = round_cost;
+  document.getElementById("power").innerHTML = totalPowerUsage;
+  document.getElementById("poweer").innerHTML = totalPower;
+
   return true;
 }
+
+setInterval(intervalCost, 15000);
+
+var timeInSecs;
+var ticker;
+
+function startTimer(secs) {
+  timeInSecs = parseInt(secs);
+  ticker = setInterval("tick()", 1000);
+}
+
+function tick() {
+  var secs = timeInSecs;
+  if (secs > 0) {
+    timeInSecs--;
+  } else {
+    clearInterval(ticker);
+    startTimer(14);
+  }
+
+  var days = Math.floor(secs / 86400);
+  secs %= 86400;
+  var hours = Math.floor(secs / 3600);
+  secs %= 3600;
+  var mins = Math.floor(secs / 60);
+  secs %= 60;
+  var pretty =
+    (days < 10 ? "0" : "") +
+    days +
+    ":" +
+    (hours < 10 ? "0" : "") +
+    hours +
+    ":" +
+    (mins < 10 ? "0" : "") +
+    mins +
+    ":" +
+    (secs < 10 ? "0" : "") +
+    secs;
+
+  document.getElementById("countdown").innerHTML = pretty;
+}
+
+startTimer(14);
